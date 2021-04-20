@@ -1,25 +1,4 @@
-// #include <iostream>
-// #include <string>
-// using namespace std;
 
-// namespace ariel{
-
-//     class NumberWithUnits{
-//         private:
-//             double size;
-//             string unit;
-        
-//         public:
-//             NumberWithUnits(double s,string u)
-//             {
-//                 size=s;
-//                 unit=u;
-//             }
-
-
-
-//     };
-// }
 #include <iostream>
 #include <fstream>
 #include <sstream>

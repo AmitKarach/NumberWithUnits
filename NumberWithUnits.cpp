@@ -6,9 +6,21 @@ using namespace std;
 namespace ariel{
             std::map<string,std::map<string,double>> units;
             NumberWithUnits n(0,"0");
-             void  NumberWithUnits::read_units(ifstream& units_file)
+             void  NumberWithUnits::read_units(ifstream& file)
              {
+                // string buff, unitA, unitB;
+                // double size1, size2;
+                // while(file >> size1 >> unitA >> buff >> size2 >> unitB){
+                //     units[unitA][unitB] = size2;
+                //     units[unitB][unitA] = 1/size2;                   
+                // }
 
+                // for(string current: units.key_comp())
+                // {
+                    
+                // }
+
+        
              }
             //operator: +,=,+=,-,-=
              NumberWithUnits& operator+(const NumberWithUnits& number1, const NumberWithUnits& number2){
