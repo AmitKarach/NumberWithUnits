@@ -168,21 +168,21 @@ namespace ariel{
             //     }
             //     return -1;
             //  }
-            int compare(const NumberWithUnits &n1, const NumberWithUnits &n2) {
+            int compare(const NumberWithUnits &number1, const NumberWithUnits &number2) {
         
-                NumberWithUnits n2_con(n1.adjust_unit(n2), n1.unit);
-                double check= (n1.size - n2_con.size);
-                double ab=fabs(check);
+                NumberWithUnits n2_con(number1.adjust_unit(number2), number1.unit);
+                double check= (number1.size - n2_con.size);
+                double check_positive=fabs(check);
                 int ans=0;
-                if (ab<EPS){
+                if (check_positive<EPS){
                     ans=0;
                 }
                 else if(check>0) {
                         ans= 1;
                     }
-                    else{
-                        ans=-1;
-                    }
+                else{
+                    ans=-1;
+                }
         
                 return ans;
             }
@@ -191,26 +191,26 @@ namespace ariel{
                 output << number.size << "[" << number.unit << ']';
                 return output;
              }
-            istream &operator>>(istream &s, NumberWithUnits &n)
+            istream &operator>>(istream &input, NumberWithUnits &n)
             {
                 char c = 0;
                 string t;
                 double v = 0;
-                s >> v >> c >> t >> c;
+                input >> v >> c >> t >> c;
                 if (t[t.length() - 1] == ']')
                 {
                     t.pop_back();
                 }
                 if (c == '-')
                 {
-                    s.putback('-');
+                    input.putback('-');
                 }
                 try
                 {
                     units.at(t);
                     n.size = v;
                     n.unit = t;
-                    return s;
+                    return input;
                 }
                 catch (const exception &e)
                 {
