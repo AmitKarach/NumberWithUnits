@@ -143,9 +143,7 @@ namespace ariel
     //compare , >,>=,<,<=,==,!=
     int compare(const NumberWithUnits &number1, const NumberWithUnits &number2)
     {
-
-        NumberWithUnits n2_con(number1.adjust_unit(number2), number1.unit);
-        double check = (number1.size - n2_con.size);
+        double check = (number1.size - number1.adjust_unit(number2));
         double check_positive = fabs(check);
         int ans = 0;
         if (check_positive < EPS)
