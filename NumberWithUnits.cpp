@@ -192,7 +192,7 @@ namespace ariel
         return output;
     }
 
-    istream &operator>>(istream &input, NumberWithUnits &n)
+    istream &operator>>(istream &input, NumberWithUnits &number)
     {
         char cha = 0;
         string unit;
@@ -211,8 +211,8 @@ namespace ariel
         {
             throw std::invalid_argument(unit + " is not a valid unit!");
         }
-        n.size = size;
-        n.unit = unit;
+        number.size = size;
+        number.unit = unit;
         return input;
     }
 
