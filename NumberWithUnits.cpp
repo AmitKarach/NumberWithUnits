@@ -145,21 +145,19 @@ namespace ariel
     {
         double check = (number1.size - number1.adjust_unit(number2));
         double check_positive = fabs(check);
-        int ans = 0;
         if (check_positive < EPS)
         {
-            ans = 0;
+            return 0;
         }
         else if (check > 0)
         {
-            ans = 1;
+            return 1;
         }
         else
         {
-            ans = -1;
+            return -1;
         }
 
-        return ans;
     }
 
     bool operator==(const NumberWithUnits &number1, const NumberWithUnits &number2)
