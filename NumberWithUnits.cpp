@@ -23,17 +23,17 @@ namespace ariel{
                 {                
                     units[unitA][unitB] = size2;
                     units[unitB][unitA] = 1/size2;
-                     update_map(unitA, unitB);
-                     update_map(unitB, unitA);                  
+                    update_map(unitA, unitB);
+                    update_map(unitB, unitA);                  
                 }
              }
 
-            void NumberWithUnits::update_map(const string &src_unit, const string &dest_unit){
-                for(auto &unit : units[dest_unit]){
-                    if(unit.first != src_unit){
-                        double new_size = units[src_unit][dest_unit]*unit.second;
-                        units[src_unit][unit.first] = new_size;
-                        units[unit.first][src_unit] = 1/new_size;
+            void NumberWithUnits::update_map(const string &src, const string &dest){
+                for(auto &unit : units[dest]){
+                    if(unit.first != src){
+                        double new_size = units[src][dest]*unit.second;
+                        units[src][unit.first] = new_size;
+                        units[unit.first][src] = 1/new_size;
                     }
                 }
             }
@@ -58,8 +58,8 @@ namespace ariel{
             return unit1.size*units[unit1.unit][unit];
     }
 
-            //operator: +,=,+=,-,-=
-             NumberWithUnits operator+(const NumberWithUnits& number1, const NumberWithUnits& number2){
+            //operator: +,+=,-,-=
+            NumberWithUnits operator+(const NumberWithUnits& number1, const NumberWithUnits& number2){
                  return NumberWithUnits(number1.size + number1.adjust_unit(number2),number1.unit);
             }
     	    
@@ -83,24 +83,67 @@ namespace ariel{
                return NumberWithUnits(-number.size, number.unit);
             } 
 
-            //  NumberWithUnits operator+=(const NumberWithUnits& number1,const NumberWithUnits& number2){
-            //      return number1+number2;
-            //  }
             NumberWithUnits& NumberWithUnits::operator+=(const NumberWithUnits& number){
-                double num2_val=this->adjust_unit(number);
-                this->size+=num2_val;
+                this->size+=this->adjust_unit(number);
                 return *this;
             }
-            //  NumberWithUnits operator-=(const NumberWithUnits& number1, const NumberWithUnits& number2){
-            //      return number1-number2;
-            //  }
+            
             NumberWithUnits& NumberWithUnits::operator-=(const NumberWithUnits& number){
-                double num2_val=this->adjust_unit(number);
-                this->size-=num2_val;
+                this->size-=this->adjust_unit(number);
                 return *this;
             }
-            //operator: ==,!=,<=,>=
            
+            
+             
+            
+            //operator: ++,--,*
+            NumberWithUnits& operator++( NumberWithUnits& number){
+               number.size++;
+               return number;
+            }     
+            NumberWithUnits& operator--( NumberWithUnits& number){
+                number.size--;
+                return number; 
+            }    
+            NumberWithUnits operator++( NumberWithUnits& number, int num){
+                NumberWithUnits befor(number.size, number.unit);
+                number.size++;
+                return befor;
+            }         
+            NumberWithUnits operator--( NumberWithUnits& number, int num)
+            {
+                NumberWithUnits befor(number.size, number.unit);
+                number.size--;
+                return befor;
+            }  
+            NumberWithUnits operator*( const NumberWithUnits &number,const double &num){
+                return NumberWithUnits(number.size*num, number.unit);
+             }
+           
+             NumberWithUnits operator*(const double &num,const NumberWithUnits &number){
+                return NumberWithUnits(number.size*num, number.unit);
+             } 
+
+            //compare , >,>=,<,<=,==,!=
+            int compare(const NumberWithUnits &number1, const NumberWithUnits &number2) {
+        
+                NumberWithUnits n2_con(number1.adjust_unit(number2), number1.unit);
+                double check= (number1.size - n2_con.size);
+                double check_positive=fabs(check);
+                int ans=0;
+                if (check_positive<EPS){
+                    ans=0;
+                }
+                else if(check>0) {
+                        ans= 1;
+                    }
+                else{
+                    ans=-1;
+                }
+        
+                return ans;
+            }
+
             bool operator==(const NumberWithUnits& number1, const NumberWithUnits& number2){
                 return (fabs(number1.size - number1.adjust_unit(number2)) <= EPS);
              }
@@ -120,102 +163,34 @@ namespace ariel{
                bool operator<=(const NumberWithUnits& number1, const NumberWithUnits& number2){
                 return compare(number1, number2) <= 0;
              }
-            //operator: * ,*=
-             NumberWithUnits operator*( const NumberWithUnits &number,const double &num){
-                return NumberWithUnits(number.size*num, number.unit);
-             }
-            //  NumberWithUnits operator*=( NumberWithUnits& number, double num){
-            //     return NumberWithUnits(number.size*num, number.unit);
-            //  }
-             NumberWithUnits operator*(const double &num,const NumberWithUnits &number){
-                return NumberWithUnits(number.size*num, number.unit);
-             }
-            //  NumberWithUnits operator*=( double num,NumberWithUnits& number){
-            //     return NumberWithUnits(number.size*num, number.unit);
-            //  }    
-            //operator: ++,--
-             NumberWithUnits& operator++( NumberWithUnits& number){
-               number.size++;
-               return number;
-             }     
-             NumberWithUnits& operator--( NumberWithUnits& number){
-               number.size--;
-               return number; 
-             }    
-             NumberWithUnits operator++( NumberWithUnits& number, int num){
-                NumberWithUnits befor(number.size, number.unit);
-                number.size++;
-                return befor;
-             }         
-             NumberWithUnits operator--( NumberWithUnits& number, int num)
-             {
-                NumberWithUnits befor(number.size, number.unit);
-                number.size--;
-                return befor;
-             }    
-        
-            //  int compare(const NumberWithUnits& number1, const NumberWithUnits& number2)
-            //  {
-            //     double check = fabs(number1.size - number1.adjust_unit(number2));
-            //     if(check<EPS)
-            //     {
-            //         return 0;
-            //     }
-                    
-            //     if(check>0)
-            //     {
-            //         return 1;
-            //     }
-            //     return -1;
-            //  }
-            int compare(const NumberWithUnits &number1, const NumberWithUnits &number2) {
-        
-                NumberWithUnits n2_con(number1.adjust_unit(number2), number1.unit);
-                double check= (number1.size - n2_con.size);
-                double check_positive=fabs(check);
-                int ans=0;
-                if (check_positive<EPS){
-                    ans=0;
-                }
-                else if(check>0) {
-                        ans= 1;
-                    }
-                else{
-                    ans=-1;
-                }
-        
-                return ans;
-            }
             //operator:input,output
              std::ostream& operator<< (std::ostream& output, const NumberWithUnits& number){
                 output << number.size << "[" << number.unit << ']';
                 return output;
-             }
+            }
+
             istream &operator>>(istream &input, NumberWithUnits &n)
             {
-                char c = 0;
-                string t;
-                double v = 0;
-                input >> v >> c >> t >> c;
-                if (t[t.length() - 1] == ']')
+                char cha = 0;
+                string unit;
+                double size = 0;
+                input >> size >> cha >> unit >> cha;
+                
+                if (unit[unit.length() - 1] == ']')
                 {
-                    t.pop_back();
+                    unit.pop_back();
                 }
-                if (c == '-')
+                if (cha == '-')
                 {
                     input.putback('-');
                 }
-                try
+                if(units.find(unit) == units.end())
                 {
-                    units.at(t);
-                    n.size = v;
-                    n.unit = t;
-                    return input;
+                    throw std::invalid_argument(unit + " is not a valid unit!");
                 }
-                catch (const exception &e)
-                {
-                    throw std::invalid_argument(t + " is not a valid unit!");
-                }
+                n.size =size;
+                n.unit=unit;
+                return input;
             }
 
 
